@@ -2,7 +2,10 @@ const Post = require("./model");
 
 exports.getAllPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().populate({
+      path: "user_id",
+      select: "name",
+    });
     res.status(200).json({
       data: posts,
     });
@@ -30,6 +33,7 @@ exports.createNewPost = async (req, res, next) => {
       title,
       body,
       tags,
+      user_id: req.user_id,
     });
     res.status(201).json({
       data: newPost,
@@ -63,6 +67,9 @@ exports.updatePostById = async (req, res, next) => {
 exports.deletePostById = async (req, res, next) => {
   const id = req.params.id;
   try {
+    const post = await Post.findById(id);
+    if (req.user_id !== post.user_id)
+      res.status(401).json({ message: "Can't do this action" });
     const deletedPost = await Post.findByIdAndDelete(id);
     res.status(201).json({
       message: "Post deleted successfully",

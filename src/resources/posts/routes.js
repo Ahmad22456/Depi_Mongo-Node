@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { checkAuth } = require("../users/middleware");
 const {
   getAllPosts,
   getPostById,
@@ -10,8 +11,8 @@ const {
 
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
-router.post("/", createNewPost);
+router.post("/", checkAuth, createNewPost);
 router.put("/:id", updatePostById);
-router.delete("/:id", deletePostById);
+router.delete("/:id", checkAuth, deletePostById);
 
 module.exports = router;

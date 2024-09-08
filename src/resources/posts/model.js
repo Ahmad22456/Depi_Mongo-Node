@@ -15,6 +15,10 @@ const postSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
